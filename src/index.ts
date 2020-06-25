@@ -1,4 +1,4 @@
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, Subscription } from 'rxjs';
 
 const observer: Observer<any> = {
     next: value => console.log('next: ', value),
@@ -6,31 +6,32 @@ const observer: Observer<any> = {
     complete: () => console.log('Complete')
 };
 
-// Es un estándar añadir el $ como sufijo del nombre de la variable para indicar que es un observable
-// const obs$ = Observable.create();
-const obs$ = new Observable<string>(subs => {
-    subs.next('Hola');
-    subs.next('Mundo');
-    
-    subs.next('Hola');
-    subs.next('Mundo');
+const intervalo$ = new Observable<number>( subscriber => {
+    let count = 0;
 
-    // Forzar un error
-    // const a = undefined;
-    // a.nombre = 'John';
+    const interval = setInterval(() => {
+        count ++;
+        subscriber.next(count);
+        console.log(count);
+    }, 1000);
 
-    // Lo que emita tras el complete no se notificará a los suscriptores
-    subs.complete();
+    // Método que se ejecuta al hacer unsubscribe
+    return () => {
+        clearInterval(interval);
 
-    subs.next('Hola');
-    subs.next('Mundo');
+        console.log('Intervalo destruido');
+    };
 });
 
-// Se puede pasar un Observer en la suscripción, para no definir el comportamiento dentro del método
-obs$.subscribe(observer);
+// Cuando se suscribe a un observable se crea una nueva instancia del mismo, por lo que se ejecuta todo el código que contenga
+const subscription: Subscription =  intervalo$.subscribe(num => console.log('Num: ', num));
+const subscription2: Subscription =  intervalo$.subscribe(num => console.log('Num: ', num));
+const subscription3: Subscription =  intervalo$.subscribe(num => console.log('Num: ', num));
 
-// Para que un observable se ejecute necesita al menos una suscripción
-// obs$.subscribe(resp =>
-//     console.log('next: ', resp), err =>
-//     console.warn('error: ', err), () =>
-//     console.log('Complete'));
+setTimeout(() => {
+    subscription.unsubscribe();
+    subscription2.unsubscribe();
+    subscription3.unsubscribe();
+
+    console.log('Completado timeout');
+}, 3000);
