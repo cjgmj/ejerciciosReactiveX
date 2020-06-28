@@ -1,12 +1,5 @@
 import { of, from } from 'rxjs';
-import { distinct } from 'rxjs/operators';
-
-const numeros$ = of<number|string>(1, '1', 1, 3, 3, 2, 2, 4, 4, 5, 3, 1, '1');
-
-numeros$.pipe(
-    // Filtra para que recibamos los valores que no se hayan emitido previamente por el observable
-    distinct()
-).subscribe(console.log);
+import { distinctUntilChanged } from 'rxjs/operators';
 
 interface Personaje {
     nombre: string;
@@ -17,7 +10,7 @@ const personajes: Personaje[] = [
         nombre: 'Megaman'
     },
     {
-        nombre: 'X'
+        nombre: 'Megaman'
     },
     {
         nombre: 'Zero'
@@ -29,7 +22,7 @@ const personajes: Personaje[] = [
         nombre: 'X'
     },
     {
-        nombre: 'Megaman'
+        nombre: 'X'
     },
     {
         nombre: 'Zero'
@@ -37,6 +30,6 @@ const personajes: Personaje[] = [
 ];
 
 from(personajes).pipe(
-    // Para objetos se puede pasar el return de la condición del filtro
-    distinct(p => p.nombre)
+    // Se puede crear la condición con el elemento anterior y el actual
+    distinctUntilChanged((ant, act) => ant.nombre === act.nombre)
 ).subscribe(console.log);
