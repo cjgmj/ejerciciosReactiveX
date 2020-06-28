@@ -1,7 +1,7 @@
 import { interval } from 'rxjs';
 import { take, reduce, tap } from 'rxjs/operators';
 
-// Reduce en Javascript
+// Reduce en JavaScript
 const numbers = [1, 2, 3, 4, 5];
 
 const totalReducer = (acumulador: number, valorActual: number) => {
