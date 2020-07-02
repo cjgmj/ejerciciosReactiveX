@@ -39,7 +39,7 @@ from(miIterable).subscribe(observer);
 
 // source$.subscribe(observer);
 
-// const source$ = from(fetch('https://www.balldontlie.io/api/v1/players'));
+// const source$ = from(fetch('https://api.github.com/users/cjgmj'));
 
 // source$.subscribe(async (resp) => {
 //     console.log(resp.ok);
